@@ -2,51 +2,97 @@
 
 typical value "1.0"--> 
 
+
+
 <robot name="robot_sim"> 
 
-    <!-- Enlace del chasis -->
-    <link name="chassis"> 
-        <visual>
+    <!--<Declare Links to be used--> 
 
-            <origin xyz="0 0 0.05" rpy="1.57079632679 0 1.57079632679"/>
-            <geometry>
-                <mesh filename="package://puzzlebot_sim/models/MCR2_1000_13_Chassis.stl"/>
-            </geometry>
-        
-        </visual>
-        
+    
+    <link name="base_link">
+  </link>
+  
+    <joint name="chassis_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="chassis"/>
+        <origin xyz="0.0 0.0 0.05"/>
+    </joint>
+
+
+    <link name="chassis"> 
+
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0.01" />
+            <inertia ixx="0" ixy="0.0" ixz="0.0" iyy="0" iyz="0.0" izz="0"/>
+        </inertial>
         <collision>
-            <origin xyz="0 0 0.05" rpy="1.507 0 0"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://puzzlebot_sim/models/MCR2_1000_13_Chassis.stl"/>
+                <mesh filename="package://puzzlebot_sim/models/Chassis.stl"/>
             </geometry>
         </collision>
-        
-        <inertial>
-            <origin xyz="0 0 0.05" rpy="0 0 0"/>
-            <mass value="0.01"/>
-            <inertia ixx="7.58333333333e-06" ixy="0.0" ixz="0.0" iyy="7.58333333333e-06" iyz="0.0" izz="1.25e-05"/>
-        </inertial>
-    
+        <visual>
+            <origin rpy="1.57079632679 0 1.57079632679" xyz="0 0 0.05"/>
+            <geometry>
+                <mesh filename="package://puzzlebot_sim/models/Chassis.stl"/>
+            </geometry>
+        </visual>
+
     </link> 
 
-    <link name="wheel_left"> 
+ 
 
-        <visual> 
+   <link name="wheel_left"> 
 
-            <origin xyz="0.055 0 0.056" rpy="0 0 1.57079632679"/> 
-
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0.01" />
+            <inertia ixx="0" ixy="0.0" ixz="0.0" iyy="0" iyz="0.0" izz="0"/>
+        </inertial>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
                 <mesh filename="package://puzzlebot_sim/models/Wheel.stl"/>
             </geometry>
+        </collision>
+        <visual>
+            <origin rpy="0 0 1.57079632679" xyz=".055 0 0.0530"/>
+            <geometry>
+                <mesh filename="package://puzzlebot_sim/models/Wheel.stl"/>
+            </geometry>
+        </visual>
 
-        </visual> 
 
     </link> 
 
+    <link name="wheel_right"> 
+
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0.01" />
+            <inertia ixx="0" ixy="0.0" ixz="0.0" iyy="0" iyz="0.0" izz="0"/>
+        </inertial>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://puzzlebot_sim/models/Wheel.stl"/>
+            </geometry>
+        </collision>
+        <visual>
+            <origin rpy="0 3.141516 1.57079632679" xyz=".055 0 0.246"/>
+            <geometry>
+                <mesh filename="package://puzzlebot_sim/models/Wheel.stl"/>
+            </geometry>
+        </visual>
+
+
+    </link> 
+
+
     
 
-    <joint name="joint_base_to_robot" type="continuous"> 
+    <joint name="joint_base_to_wl" type="continuous"> 
 
         <parent link="chassis"/> 
 
@@ -56,13 +102,13 @@ typical value "1.0"-->
 
         <!--child: child link name --> 
 
-        <origin xyz="0.0 0.15 0.05" rpy="1.5708 0 0" /> 
+        <origin xyz="0 0.24 0.05" rpy="1.5708 0 0" /> 
 
         <!--origin: This is the transform from the parent link to the child link 
 
         xyz: xyz offset rpy:rotaton offset (radians)--> 
 
-        <axis xyz="1 0 0 " /> 
+        <axis xyz="0 1 0 " /> 
 
         <!--Rotation/Translation axis for the joints(revolute,continuos/prismatic) 
 
@@ -70,23 +116,7 @@ typical value "1.0"-->
 
     </joint> 
 
-    <link name="wheel_right"> 
-
-        <visual> 
-
-            <origin xyz="0.055 0 0.245" rpy="0 3.1416 1.57079632679"/> 
-
-            <geometry>
-                <mesh filename="package://puzzlebot_sim/models/Wheel.stl"/>
-            </geometry>
-
-        </visual> 
-
-    </link> 
-
-    
-
-    <joint name="joint_base_to_robot_right" type="continuous"> 
+    <joint name="joint_base_to_wr" type="continuous"> 
 
         <parent link="chassis"/> 
 
@@ -96,13 +126,13 @@ typical value "1.0"-->
 
         <!--child: child link name --> 
 
-        <origin xyz="0.0 0.15 0.05" rpy="1.5708 0 0" /> 
+        <origin xyz="0 -0.44 0.05" rpy="1.5708 0 0" /> 
 
         <!--origin: This is the transform from the parent link to the child link 
 
         xyz: xyz offset rpy:rotaton offset (radians)--> 
 
-        <axis xyz="1 0 0 " /> 
+        <axis xyz="0 1 0 " /> 
 
         <!--Rotation/Translation axis for the joints(revolute,continuos/prismatic) 
 
@@ -110,117 +140,6 @@ typical value "1.0"-->
 
     </joint> 
 
-</robot>
-<?xml version="1.0"?> <!--Declare XML Version  
+     
 
-typical value "1.0"--> 
-
-<robot name="robot_sim"> 
-
-    <!-- Enlace del chasis -->
-    <link name="chassis"> 
-        <visual>
-
-            <origin xyz="0 0 0.05" rpy="1.57079632679 0 1.57079632679"/>
-            <geometry>
-                <mesh filename="package://puzzlebot_sim/models/MCR2_1000_13_Chassis.stl"/>
-            </geometry>
-            
-        </visual>
-        
-        <collision>
-            <origin xyz="0 0 0.05" rpy="1.507 0 0"/>
-            <geometry>
-                <mesh filename="package://puzzlebot_sim/models/MCR2_1000_13_Chassis.stl"/>
-            </geometry>
-        </collision>
-        
-        <inertial>
-            <origin xyz="0 0 0.05" rpy="0 0 0"/>
-            <mass value="0.01"/>
-            <inertia ixx="7.58333333333e-06" ixy="0.0" ixz="0.0" iyy="7.58333333333e-06" iyz="0.0" izz="1.25e-05"/>
-        </inertial>
-    
-    </link> 
-
-    <link name="wheel_left"> 
-
-        <visual> 
-
-            <origin xyz="0.055 0 0.056" rpy="0 0 1.57079632679"/> 
-
-            <geometry>
-                <mesh filename="package://puzzlebot_sim/models/Wheel.stl"/>
-            </geometry>
-
-        </visual> 
-
-    </link> 
-
-    
-
-    <joint name="joint_base_to_robot" type="continuous"> 
-
-        <parent link="chassis"/> 
-
-        <!--parent: Parent link name --> 
-
-        <child link="wheel_left"/> 
-
-        <!--child: child link name --> 
-
-        <origin xyz="0.0 0.15 0.05" rpy="1.5708 0 0" /> 
-
-        <!--origin: This is the transform from the parent link to the child link 
-
-        xyz: xyz offset rpy:rotaton offset (radians)--> 
-
-        <axis xyz="1 0 0 " /> 
-
-        <!--Rotation/Translation axis for the joints(revolute,continuos/prismatic) 
-
-        noy used with Fixed Joints --> 
-
-    </joint> 
-
-    <link name="wheel_right"> 
-
-        <visual> 
-
-            <origin xyz="0.055 0 0.245" rpy="0 3.1416 1.57079632679"/> 
-
-            <geometry>
-                <mesh filename="package://puzzlebot_sim/models/Wheel.stl"/>
-            </geometry>
-
-        </visual> 
-
-    </link> 
-
-    
-
-    <joint name="joint_base_to_robot_right" type="continuous"> 
-
-        <parent link="chassis"/> 
-
-        <!--parent: Parent link name --> 
-
-        <child link="wheel_right"/> 
-
-        <!--child: child link name --> 
-
-        <origin xyz="0.0 0.15 0.05" rpy="1.5708 0 0" /> 
-
-        <!--origin: This is the transform from the parent link to the child link 
-
-        xyz: xyz offset rpy:rotaton offset (radians)--> 
-
-        <axis xyz="1 0 0 " /> 
-
-        <!--Rotation/Translation axis for the joints(revolute,continuos/prismatic) 
-
-        noy used with Fixed Joints --> 
-
-    </joint> 
-
-</robot>
+</robot>  

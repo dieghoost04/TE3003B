@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  visualization_msgs  # Aquí se añade visualization_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -108,6 +109,7 @@ catkin_package(
 #  LIBRARIES puzzlebot_sim
 #  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs
 #  DEPENDS system_lib
+  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs visualization_msgs  # Se agrega visualization_msgs
 )
 
 ###########
@@ -205,3 +207,4 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+

@@ -40,7 +40,5 @@ class TfBroadcaster():
         self.message = tf_msg
         # Publish the transform
         self.tf_broadcaster.sendTransform(tf_msg)
-
-        
 if __name__ == '__main__': 
     TfBroadcaster()

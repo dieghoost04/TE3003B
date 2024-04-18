@@ -2,9 +2,9 @@
 
 <launch> 
 
-    <arg name="robot" default="$(find puzzlebot_sim)/urdf/robot.urdf"/> 
+    <arg name="urdf_dir" default="$(find puzzlebot_sim)/urdf/robot.urdf"/> 
 
-    <param name="robot_description" command="cat $(arg robot)" /> 
+    <param name="robot_description" command="cat $(arg urdf_dir)" /> 
 
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" > 
 
@@ -16,6 +16,8 @@
     <node pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" name="joint_state_publisher_gui" > 
 
     </node> 
+
+ 
 
     <node  pkg="puzzlebot_sim" type="localisation.py" name="localisation"> 
 

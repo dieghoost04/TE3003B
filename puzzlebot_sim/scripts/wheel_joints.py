@@ -2,86 +2,91 @@
 import rospy
 import numpy as np
 from sensor_msgs.msg import JointState
+from geometry_msgs.msg import TransformStamped 
+from nav_msgs.msg import Odometry
+from tf.transformations import euler_from_quaternion
 
 
 # Declare the output Messages
 
-#q = tf_conversions.transformations.quaternion_from_euler(0, 0, 0.0)
-contJoints = JointState()
+class joint_wheels():
+    def __init__(self):
+        rospy.init_node('wheel_joints') 
 
-# Declare the output Messages
-def init_joints():
-    contJoints.header.frame_id = "link1"
-    contJoints.header.stamp = rospy.Time.now()
-    contJoints.name.extend(["joint1", "joint2", "joint3"])
-    contJoints.position.extend([0.0, 0.0, 0.0])
-    contJoints.velocity.extend([0.0, 0.0, 0.0])
-    contJoints.effort.extend([0.0, 0.0, 0.0])
+        rospy.Subscriber('/odom', Odometry, self.odom_callback)
+        self.joint_pub = rospy.Publisher('/joint_states', JointState, queue_size=1)
 
-#wrap to pi function
-def wrap_to_Pi(theta):
-    result = np.fmod((theta + np.pi),(2 * np.pi))
-    if(result < 0):
-        result += 2 * np.pi
-    return result - np.pi
 
-def wrap_prismatic_position(tiempo):
-    # Definir los límites del rango de la articulación prismatic
-    lower_limit = -2.0
-    upper_limit = 2.0
-    period = 4.0
-    normalized_position = 2 * np.sin(2 * np.pi * tiempo / period)
+
+        self.theta = 0
+        self.dt = 0.02
+        r = rospy.Rate(int(1.0/self.dt)) 
+        
     
-    return normalized_position
-    # Envolver la posición dentro del rango definido
-    return np.clip(position, lower_limit, upper_limit)
+        self.message = TransformStamped()
 
-def normalize_revolute_position(tiempo):
+        #q = tf_conversions.transformations.quaternion_from_euler(0, 0, 0.0)
+        self.contJoints = JointState()
 
-    lower_limit = -3.14159
-    upper_limit = 3.14159
+        self.init_joints()
 
-    period = 4
-    normalized_position = np.sin(2 * np.pi * tiempo / period)
-    scaled_position = upper_limit * normalized_position
-    return scaled_position
-
-
-
-
-#Stop Condition
-def stop():
-    #Setup the stop message (can be the same as the control message)
-    print("Stopping")
-
-if __name__=='__main__':
-
-    #Initialise and Setup node
-    rospy.init_node("Puzzlebot_Pose_Estimator")
- 
-    # Configure the Node
-    loop_rate = rospy.Rate(rospy.get_param("/rate",100))
-    rospy.on_shutdown(stop)
-
-    #Init joints
-    init_joints()
-
-    #Setup Transform Broadcasters
-    joint_pub = rospy.Publisher('/joint_states', JointState, queue_size=1)
-
-    print("The Estimator is Running")
-    try:
-    #Run the node
         while not rospy.is_shutdown(): 
-            t = rospy.Time.now().to_sec()
-            contJoints.header.stamp = rospy.Time.now()
-            contJoints.position[0] = wrap_to_Pi(t*0.1)
-            contJoints.position[1] = normalize_revolute_position(t*0.1)
-            contJoints.position[2] = wrap_prismatic_position(t*0.2)
+            self.contJoints.header.stamp = rospy.Time.now()
+            self.contJoints.position[0] = self.wrap_to_Pi(self.theta)
+            self.contJoints.position[1] = self.wrap_to_Pi(self.theta)
+           
             
-            joint_pub.publish(contJoints)
+            self.joint_pub.publish(self.contJoints)
 
-            loop_rate.sleep()
- 
-    except rospy.ROSInterruptException:
-        pass
+            r.sleep()
+        
+
+
+        # Declare the output Messages
+    def init_joints(self):
+        self.contJoints.header.frame_id = "chassis"
+        self.contJoints.header.stamp = rospy.Time.now()
+        self.contJoints.name.extend(["joint_base_to_wl", "joint_base_to_wr"])
+        self.contJoints.position.extend([0.0, 0.0])
+        self.contJoints.velocity.extend([0.0, 0.0])
+       
+    
+
+    #wrap to pi function
+    def wrap_to_Pi(self,theta):
+        result = np.fmod((theta + np.pi),(2 * np.pi))
+        if(result < 0):
+            result += 2 * np.pi
+        return result - np.pi
+    
+    def odom_callback(self, odom_msg):
+        # Get the pose from the odometry message
+        pose = odom_msg.pose.pose
+
+        self.theta = 0
+        pose = odom_msg.pose.pose
+
+        # Extract orientation quaternion
+        orientation = pose.orientation
+
+        # Convert quaternion to Euler angles
+        x = orientation.x
+        y = orientation.y
+        z = orientation.z
+        w = orientation.w
+
+        # Roll (x), pitch (y), and yaw (z) angles
+        roll, pitch, yaw = euler_from_quaternion([x, y, z, w])
+
+        # Extract the yaw angle (rotation around the Z-axis)
+        self.theta = yaw
+
+if __name__ == '__main__': 
+    joint_wheels()
+
+        
+
+
+
+
+
