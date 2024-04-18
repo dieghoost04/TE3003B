@@ -1,0 +1,85 @@
+<?xml version="1.0"?> <!--Declare XML Version  
+
+typical value "1.0"--> 
+
+
+
+<robot name="robot_sim"> 
+
+    <!--<Declare Links to be used--> 
+
+    <link name="odom2"> 
+
+        <visual> 
+
+            <origin xyz="0 0 0" rpy="0 0 0"/> 
+
+            <geometry> 
+
+                <box size="0.3 0.2 0.1" /> 
+
+            </geometry> 
+
+            <material name="Red"> 
+
+                <color rgba="1.0 0.0 0.0 1.0"/> 
+
+            </material> 
+
+        </visual> 
+
+    </link> 
+
+ 
+
+   <link name="wheel_left"> 
+
+        <visual> 
+
+            <origin xyz="0 0 0" rpy="0 0 0"/> 
+
+            <geometry> 
+
+                <cylinder length="0.01" radius="0.05" /> 
+
+            </geometry> 
+
+            <material name="White"> 
+
+                <color rgba="1.0 1.0 1.0 1.0"/> 
+
+            </material> 
+
+        </visual> 
+
+    </link> 
+
+ 
+
+    <joint name="joint_base_to_robot" type="continuous"> 
+
+        <parent link="odom2"/> 
+
+        <!--parent: Parent link name --> 
+
+        <child link="wheel"/> 
+
+        <!--child: child link name --> 
+
+        <origin xyz="0.0 0.15 0.05" rpy="1.5708 0 0" /> 
+
+        <!--origin: This is the transform from the parent link to the child link 
+
+        xyz: xyz offset rpy:rotaton offset (radians)--> 
+
+        <axis xyz="0 0 1 " /> 
+
+        <!--Rotation/Translation axis for the joints(revolute,continuos/prismatic) 
+
+        noy used with Fixed Joints --> 
+
+    </joint> 
+
+     
+
+</robot>  
