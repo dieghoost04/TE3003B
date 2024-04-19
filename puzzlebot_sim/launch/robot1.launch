@@ -7,8 +7,6 @@
     <param name="robot_description" command="cat $(arg robot)" /> 
 
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" /> 
-
-    <node  pkg="puzzlebot_sim" type="controller.py" name="controller" />
     
     <node  pkg="puzzlebot_sim" type="sim_robot.py" name="sim_robot" /> 
 

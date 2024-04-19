@@ -8,9 +8,9 @@ from nav_msgs.msg import Odometry
  
 class TfBroadcaster(): 
     def __init__(self): 
-        rospy.init_node('tf2_broadcaster') 
+        rospy.init_node('CoordinateTransform') 
 
-        rospy.Subscriber('/odom', Odometry, self.odom_callback)
+        rospy.Subscriber('odom', Odometry, self.odom_callback)
         self.tf_broadcaster = tf2_ros.TransformBroadcaster()
 
         print("Node broadcaster initialized!!") 
@@ -23,7 +23,6 @@ class TfBroadcaster():
             
         while not rospy.is_shutdown(): 
             print(self.message)   
-                
             r.sleep() 
 
     def odom_callback(self, odom_msg):
@@ -38,6 +37,7 @@ class TfBroadcaster():
         tf_msg.transform.translation = pose.position
         tf_msg.transform.rotation = pose.orientation
         self.message = tf_msg
+
         # Publish the transform
         self.tf_broadcaster.sendTransform(tf_msg)
 
