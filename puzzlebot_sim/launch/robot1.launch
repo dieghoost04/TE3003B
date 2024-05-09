@@ -10,13 +10,16 @@
     
     <node  pkg="puzzlebot_sim" type="sim_robot.py" name="sim_robot" /> 
 
-    <node  pkg="puzzlebot_sim" type="localisation.py" name="localisation" /> 
+    <node  pkg="puzzlebot_sim" type="localisation.py" name="localisation"  output="screen"  /> 
 
     <node  pkg="puzzlebot_sim" type="transform.py" name="transform" /> 
 
     <node  pkg="puzzlebot_sim" type="joint_state.py" name="joint_state" /> 
 
-    <node  pkg="rviz" type="rviz" name="rviz" required="true" /> 
+    <node  pkg="puzzlebot_sim" type="pose_array_publisher.py" name="pose_errors" /> 
 
+    <arg name="config" default="odometry_rviz"/>
     
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find puzzlebot_sim)/rviz/$(arg config).rviz" respawn="false" output="screen"/>
+
 </launch> 
